@@ -4,10 +4,14 @@ const Navigation = () => {
   return (
     <div className="flex justify-between bg-stone-100 shadow-lg">
       <Link to={"/"}>
-        <div className="px-10 py-5">Home</div>
+        <div className="px-[70px] py-5 hover:text-violet-500 font-bold">
+          Home
+        </div>
       </Link>
       <Link to={"/login"}>
-        <div className="px-10 py-5">Login</div>
+        <div className="px-[70px] py-5 hover:text-violet-500 font-bold">
+          Login
+        </div>
       </Link>
     </div>
   );

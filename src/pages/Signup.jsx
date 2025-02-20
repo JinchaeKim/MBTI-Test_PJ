@@ -14,12 +14,11 @@ const Signup = () => {
           <br />
           <button
             type="submit"
-            className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md"
+            className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md hover:bg-violet-300"
           >
             회원가입
           </button>
         </AuthForm>
-
         <div className="flex pt-5">
           <p>이미 계정이 있으신가요?</p>
           <Link to={"/login"}>
