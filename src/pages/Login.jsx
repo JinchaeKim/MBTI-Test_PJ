@@ -10,7 +10,7 @@ const Login = () => {
         <AuthForm mode="login" onSubmit={handleLogin} className="h-[250px]">
           <button
             type="submit"
-            className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md"
+            className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md hover:bg-violet-300"
           >
             로그인
           </button>
