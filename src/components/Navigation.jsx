@@ -21,17 +21,13 @@ const Navigation = () => {
       ) : (
         <div className="flex">
           <Link to={"/profile"}>
-            <div className="px-[70px] py-5 m-3 hover:text-violet-500">
-              Profile
-            </div>
+            <div className="px-[15px] py-5 hover:text-violet-500">Profile</div>
           </Link>
           <Link to={"/test"}>
-            <div className="px-[70px] py-5 m-3 hover:text-violet-500">Test</div>
+            <div className="px-[15px] py-5 hover:text-violet-500">Test</div>
           </Link>
           <Link to={"/results"}>
-            <div className="px-[70px] py-5 m-3 hover:text-violet-500">
-              Results
-            </div>
+            <div className="px-[15px] py-5 hover:text-violet-500">Results</div>
           </Link>
           <LogoutBtn />
         </div>
