@@ -1,10 +1,36 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthForm from "../components/AuthForm";
+import { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import api from "../api/auth";
 
 const Login = () => {
-  const handleLogin = () => {};
+  const { login, id, password } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(api, {
+        id,
+        password,
+      });
+      const data = response.data;
+      if (data.success) {
+        login(data.accessToken);
+        navigate("/test");
+      } else {
+        alert("로그인에 실패했습니다!");
+      }
+    } catch (error) {
+      console.error("Login error", error);
+      alert("로그인에 실패했습니다!");
+    }
+  };
+
   return (
-    <form className="flex mt-10 justify-center items-center ">
+    <div className="flex mt-10 justify-center items-center ">
       <div className="p-5 m-7 h-[450px] w-[400px] bg-gray-50 rounded-lg shadow-xl">
         <p className="p-5 font-medium text-[30px]">로그인</p>
         <AuthForm mode="login" onSubmit={handleLogin} className="h-[250px]">
@@ -24,7 +50,7 @@ const Login = () => {
           </Link>
         </div>
       </div>
-    </form>
+    </div>
   );
 };
 
