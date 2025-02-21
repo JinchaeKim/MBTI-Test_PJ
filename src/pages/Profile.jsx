@@ -1,13 +1,17 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import api from "../api/auth";
+import { getUserProfile, updateProfile } from "../api/auth";
 
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState({
+    id: "",
+    nickname: "",
+    avatar: null,
+    success: true,
+  });
   const [newNickName, setNewNickName] = useState("");
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, token } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,11 +21,11 @@ const Profile = () => {
     } else {
       const fetchUserInfo = async () => {
         try {
-          const token = localStorage.getItem("accessToken");
-          const response = await axios.get(api, {
-            headers: { Authorization: `Baearer ${token}` },
+          const data = await getUserProfile(token);
+          setUserInfo({
+            id: data.id,
+            nickname: data.nickname,
           });
-          setUserInfo(response.data);
         } catch (error) {
           console.log("Faild to fetch user info", error);
         }
@@ -29,23 +33,19 @@ const Profile = () => {
       fetchUserInfo();
     }
   }, [isAuthenticated, navigate]);
+  console.log("userInfo", userInfo);
 
   const handleNickNameChange = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("accessToken");
       const formData = new FormData();
       formData.append("nickname", newNickName);
-
-      const response = await axios.patch(api, formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      if (response.data.success) {
-        setUserInfo((prev) => ({ ...prev, nickname: response.data.nickName }));
+      const data = await updateProfile(formData);
+      if (data.success) {
+        setUserInfo((prev) => ({
+          ...prev,
+          nickname: updateProfile().nickName,
+        }));
         alert("닉네임이 변경되었습니다.");
         setNewNickName("");
       } else {
@@ -53,10 +53,9 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Failed to update nickname", error);
-      alert("닉네임 변경에 실패했습니다.");
+      alert(error.response.data.message);
     }
   };
-
   if (!userInfo) {
     return <div>Loading...</div>;
   }
