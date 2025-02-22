@@ -18,7 +18,9 @@ export const login = async (userData) => {
 
 // 회원 정보 확인
 export const getUserProfile = async (token) => {
-  const response = await authApi.get("/user", token);
+  const response = await authApi.get("/user", {
+    headers: { Authorization: `Bearer ${token}` },
+  });
   return response.data;
 };
 
