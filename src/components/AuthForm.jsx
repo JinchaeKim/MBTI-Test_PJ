@@ -28,7 +28,7 @@ const AuthForm = ({ children, className, mode }) => {
         alert("로그인에 실패했습니다!");
       }
     } catch (error) {
-      console.error("Login error", error);
+      console.log("Login error", error);
       alert(error.response.data.message);
     }
   };
