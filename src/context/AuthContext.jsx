@@ -1,9 +1,9 @@
 import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
-const token = localStorage.getItem("accessToken");
 
 export const AuthProvider = ({ children }) => {
+  const token = localStorage.getItem("accessToken");
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
 
   return (
