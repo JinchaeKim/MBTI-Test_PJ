@@ -25,8 +25,13 @@ export const getUserProfile = async (token) => {
 };
 
 // 프로필 변경
-export const updateProfile = async (formData) => {
-  const response = await authApi.patch("/profile", formData);
+export const updateProfile = async (token, formData) => {
+  const response = await authApi.patch("/profile", formData, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data;
 };
 
