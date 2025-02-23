@@ -4,14 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { getUserProfile, updateProfile } from "../api/auth";
 
 const Profile = () => {
-  const [userInfo, setUserInfo] = useState({
-    id: "",
-    nickname: "",
-    avatar: null,
-    success: true,
-  });
   const [newNickName, setNewNickName] = useState("");
-  const { isAuthenticated, token } = useContext(AuthContext);
+  const { isAuthenticated, token, userInfo, setUserInfo } =
+    useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
