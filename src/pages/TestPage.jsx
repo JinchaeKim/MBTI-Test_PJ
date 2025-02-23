@@ -3,6 +3,7 @@ import TestForm from "../components/TestForm";
 import { calculateMBTI, mbtiDescriptions } from "../utils/mbtiCalculator";
 // import { createTestResult } from "../api/testResults";
 import { useNavigate } from "react-router-dom";
+import { createTestResult } from "../api/testResults";
 
 const TestPage = ({ user }) => {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ const TestPage = ({ user }) => {
   const handleTestSubmit = async (answers) => {
     const mbtiResult = calculateMBTI(answers); //MBTI 유형
     setResult(mbtiResult);
+    createTestResult({ dfdf: "Dfdf" });
     /* Test 결과는 mbtiResult 라는 변수에 저장이 됩니다. 이 데이터를 어떻게 API 를 이용해 처리 할 지 고민해주세요. */
   };
 
