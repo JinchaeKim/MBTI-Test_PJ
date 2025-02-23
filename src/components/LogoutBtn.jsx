@@ -1,12 +1,15 @@
-import { useState } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LogoutBtn = () => {
-  const { setIsAuthenticated } = useState(AuthContext);
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const navigation = useNavigate();
 
   const logout = () => {
     localStorage.removeItem("accessToken");
     setIsAuthenticated(false);
+    navigation("/");
   };
 
   return (
