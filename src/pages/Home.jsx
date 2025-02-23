@@ -34,7 +34,7 @@ const Home = () => {
       <Link to={"/test"}>
         <button
           type="button"
-          className="flex justify-center px-8 py-2 mx-auto mt-10 bg-violet-400 text-white rounded-full hover:bg-opacity-0 hover:text-violet-500 focus:outline-2 focus:outline-offset-2 focus:outline-violet-400"
+          className="flex justify-center px-8 py-2 mx-auto mt-10 bg-violet-400 text-white rounded-full hover:bg-opacity-0 hover:text-violet-500 focus:outline-2 focus:outline-offset-2 focus:outline-violet-400 font-semibold hover:bg-primary-dark transition duration-300"
         >
           내 성격 유형 알아보기
         </button>

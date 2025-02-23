@@ -96,7 +96,7 @@ const AuthForm = ({ children, className, mode }) => {
         <br />
         <button
           type="submit"
-          className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md hover:bg-violet-300"
+          className="p-3 m-3 w-[270px] text-white bg-violet-400 rounded-md  hover:bg-opacity-0 hover:text-violet-500 focus:outline-2 focus:outline-offset-2 focus:outline-violet-400 font-semibold hover:bg-primary-dark transition duration-300"
         >
           {mode === "login" ? "로그인" : "회원가입"}
         </button>

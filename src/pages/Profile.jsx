@@ -79,7 +79,7 @@ const Profile = () => {
           />
           <button
             type="submit"
-            className="p-3 m-4 w-[360px] text-white bg-violet-400 rounded-md hover:bg-violet-300"
+            className="p-3 m-4 w-[360px] text-white bg-violet-400 rounded-md hover:bg-opacity-0 hover:text-violet-500 focus:outline-2 focus:outline-offset-2 focus:outline-violet-400 font-semibold hover:bg-primary-dark transition duration-300"
           >
             프로필 업데이트
           </button>
