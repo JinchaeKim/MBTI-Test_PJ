@@ -1,49 +1,79 @@
 import { useContext, useEffect, useState } from "react";
-import { getTestResults, updateTestResultVisibility } from "../api/testResults";
+import {
+  deleteTestResult,
+  getTestResults,
+  updateTestResultVisibility,
+} from "../api/testResults";
 import { mbtiDescriptions } from "../utils/mbtiCalculator";
 import { AuthContext } from "../context/AuthContext";
+import { getUserProfile } from "../api/auth";
 
 const TestResultList = () => {
   const [cards, setCards] = useState([]);
   const [isVisibility, setIsVisibility] = useState(false);
-  const { userInfo } = useContext(AuthContext);
+  const { userInfo, setUserInfo, token } = useContext(AuthContext);
 
-  // DB에서 공개 여부 변경하기
+  // userInfo 가져오기 : isOwner에 필요
   useEffect(() => {
-    const changeData = async () => {
-      const info = await updateTestResultVisibility();
-      setIsVisibility(info);
-    };
-    changeData();
-  });
+    const fetchUserInfo = async () => {
+      try {
+        const data = await getUserProfile(token);
 
-  // DB에서 값 가져오기
+        setUserInfo({
+          id: data.id,
+          nickname: data.nickname,
+        });
+      } catch (error) {
+        console.log("Faild to fetch user info", error);
+      }
+    };
+    fetchUserInfo();
+  }, []);
+
+  // DB: 결과값 가져오기
   useEffect(() => {
     const fetchData = async () => {
-      const data = await getTestResults();
-      setCards(data);
+      try {
+        const data = await getTestResults();
+        setCards(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
     };
-
-    // data의 visibility로 조건부 렌더링
-
     fetchData();
-  }, []);
-  console.log("cards", cards);
+  }, [isVisibility]);
 
-  // 작성자 글에만 버튼 표시하기
-  // const isOwner = cards.some((card) => {
-  //   return card.id === userInfo.id;
-  // });
-  // console.log("isOwner", isOwner);
+  // 공개 비공개 전환
+  const handleVisibility = async (card) => {
+    await updateTestResultVisibility(card.id, !card.visibility);
+    setIsVisibility(!isVisibility);
+  };
+
+  // 공개 비공개 리스트 filter -> map
+  const viewCards = cards.filter((card) => {
+    return card.visibility || card.userId === userInfo.id;
+  });
+
+  // 카드 삭제
+  const deleteCard = (cardId) => {
+    deleteTestResult(cardId);
+    setIsVisibility(!isVisibility);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center mx-auto md:w-[70%] w-[90%]">
-      <div className="mt-[60px] mb-[30px] text-[27px] font-extrabold text-[#8ca147]">
-        다른 사람들의 MBTI도 궁금해 !
-      </div>
-      {cards.map((card) => {
+      {cards.length === 0 ? (
+        <div className="text-center mt-[80px] mb-[30px]  text-[23px] text-[#475da1]">
+          아직 공유된 검사 결과가 없습니다. <br />
+          가장 먼저 mbti 검사 결과를 공유하세요 !
+        </div>
+      ) : (
+        <div className="mt-[60px] mb-[30px] text-[27px] font-bold text-[#4b86cd]">
+          다른 사람들의 MBTI도 궁금해 !
+        </div>
+      )}
+      {viewCards.map((card) => {
         const isOwner = card.userId === userInfo.id; // 개별 카드 기준으로 작성자 확인
-
         return (
           <div
             key={card.id}
@@ -64,19 +94,28 @@ const TestResultList = () => {
                   {mbtiDescriptions[card.result]}
                 </div>
 
-                {/* 작성자에게만 버튼 표시 */}
+                {/* 카드에 있는 visibility로 작성자에게만 버튼 표시 */}
                 {isOwner && (
                   <div className="flex justify-end gap-3 mt-3 mr-5">
-                    {isVisibility ? (
-                      <button className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300">
+                    {card.visibility ? (
+                      <button
+                        onClick={() => handleVisibility(card)}
+                        className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
+                      >
                         비공개로 전환
                       </button>
                     ) : (
-                      <button className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300">
+                      <button
+                        onClick={() => handleVisibility(card)}
+                        className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
+                      >
                         공개로 전환
                       </button>
                     )}
-                    <button className="px-[20px] py-[8px] text-white bg-red-500 rounded-full hover:bg-opacity-0 hover:text-red-500 focus:outline-2 focus:outline-offset-2 focus:outline-red-400 font-semibold hover:bg-primary-dark transition duration-300">
+                    <button
+                      onClick={() => deleteCard(card.id)}
+                      className="px-[20px] py-[8px] text-white bg-red-500 rounded-full hover:bg-opacity-0 hover:text-red-500 focus:outline-2 focus:outline-offset-2 focus:outline-red-400 font-semibold hover:bg-primary-dark transition duration-300"
+                    >
                       삭제
                     </button>
                   </div>
