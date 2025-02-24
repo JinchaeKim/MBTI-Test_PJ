@@ -10,6 +10,7 @@ const TestPage = () => {
   const [result, setResult] = useState(null);
   const { userInfo } = useContext(AuthContext);
 
+  // TestForm에서 사용
   const handleTestSubmit = async (answers) => {
     const now = new Date();
     const formattedDate = now.toLocaleString("ko-KR");
@@ -17,21 +18,24 @@ const TestPage = () => {
     setResult(mbtiResult);
 
     const resultsData = await createTestResult({
-      id: userInfo.id,
       nickname: userInfo.nickname,
       result: mbtiResult,
       visibility: false,
       date: formattedDate,
       userId: userInfo.id,
     });
+
     if (!resultsData) {
       alert("결과 저장에 실패했습니다.");
       return;
     }
   };
+
+  // 제출 후 결과페이지 이동
   const handleNavigateToResults = () => {
     navigate("/results");
   };
+
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <div className="rounded-lg">
