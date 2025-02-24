@@ -1,8 +1,28 @@
 {
   "testResults": [
     {
-      "id": "590c",
-      "dfdf": "Dfdf"
+      "id": "b986",
+      "nickname": "123123123123",
+      "result": "INTJ",
+      "visibility": true,
+      "date": "2025. 2. 24. 오후 10:56:33",
+      "userId": "12345"
+    },
+    {
+      "id": "cc8d",
+      "nickname": "jin123",
+      "result": "ESTJ",
+      "visibility": true,
+      "date": "2025. 2. 24. 오후 11:25:20",
+      "userId": "jin123"
+    },
+    {
+      "id": "e78d",
+      "nickname": "232323",
+      "result": "ESTJ",
+      "visibility": false,
+      "date": "2025. 2. 25. 오전 12:02:36",
+      "userId": "232323"
     }
   ]
 }
