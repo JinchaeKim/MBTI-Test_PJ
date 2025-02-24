@@ -9,6 +9,7 @@ const Profile = () => {
     useContext(AuthContext);
   const navigate = useNavigate();
 
+  // DB: userprofile 가져오기
   useEffect(() => {
     if (!isAuthenticated) {
       alert("로그인이 필요합니다.");
@@ -17,7 +18,6 @@ const Profile = () => {
       const fetchUserInfo = async () => {
         try {
           const data = await getUserProfile(token);
-          console.log("data", data);
 
           setUserInfo({
             id: data.id,
@@ -30,7 +30,8 @@ const Profile = () => {
       fetchUserInfo();
     }
   }, []);
-  console.log("userInfo", userInfo);
+
+  // 닉네임 변경
   const handleNickNameChange = async (e) => {
     e.preventDefault();
     try {
