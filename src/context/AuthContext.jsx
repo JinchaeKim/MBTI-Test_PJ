@@ -3,7 +3,7 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const token = localStorage.getItem("accessToken");
+  const token = sessionStorage.getItem("accessToken");
   const [isAuthenticated, setIsAuthenticated] = useState(!!token);
   const [userInfo, setUserInfo] = useState({
     id: "",
