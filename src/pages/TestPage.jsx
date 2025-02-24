@@ -15,15 +15,20 @@ const TestPage = () => {
     const formattedDate = now.toLocaleString("ko-KR");
     const mbtiResult = calculateMBTI(answers); //MBTI 유형
     setResult(mbtiResult);
-    createTestResult({
+
+    const resultsData = await createTestResult({
+      id: userInfo.id,
       nickname: userInfo.nickname,
       result: mbtiResult,
+      visibility: false,
       date: formattedDate,
       userId: userInfo.id,
     });
-    /* Test 결과는 mbtiResult 라는 변수에 저장이 됩니다. 이 데이터를 어떻게 API 를 이용해 처리 할 지 고민해주세요. */
+    if (!resultsData) {
+      alert("결과 저장에 실패했습니다.");
+      return;
+    }
   };
-
   const handleNavigateToResults = () => {
     navigate("/results");
   };
