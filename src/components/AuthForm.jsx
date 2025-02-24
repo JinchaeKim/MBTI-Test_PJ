@@ -1,8 +1,7 @@
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { login, register, updateProfile } from "../api/auth";
-import { Navigate, useNavigate } from "react-router-dom";
-import ToastList from "./Toastify";
+import { useNavigate } from "react-router-dom";
 
 const AuthForm = ({ children, className, mode }) => {
   const [userInput, setUserInput] = useState({
@@ -22,25 +21,24 @@ const AuthForm = ({ children, className, mode }) => {
         password: userInput.password,
       });
       if (data.success) {
-        localStorage.setItem("accessToken", data?.accessToken);
+        sessionStorage.setItem("accessToken", data?.accessToken);
         setUserInfo({
           id: data.userId, // 백엔드에서는 사용자의 아이디를 'userId'라는 이름으로 관리함
           nickname: data.nickname,
         });
         setIsAuthenticated(true);
         const formData = new FormData();
-        formData.append("id", data.id);
         formData.append("nickname", data.nickname);
-        formData.append("userId", data.id);
+        formData.append("userId", data.userId);
         await updateProfile(data.accessToken, formData);
 
-        Navigate("/");
+        navigation("/");
       } else {
-        alert.error("로그인에 실패했습니다!");
+        alert("로그인에 실패했습니다!");
       }
     } catch (error) {
       console.error("Login error", error);
-      alert.error("로그인에 실패했습니다!");
+      alert("로그인에 실패했습니다!");
     }
   };
 
