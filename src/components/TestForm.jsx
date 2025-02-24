@@ -37,6 +37,7 @@ const TestForm = ({ onSubmit }) => {
                   name={`question-${index}`}
                   value={option}
                   checked={answers[index]?.answer === option}
+                  required
                   onChange={() => handleChange(index, option)}
                   className="mr-2 text-primary-color"
                 />
