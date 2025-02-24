@@ -4,14 +4,17 @@ import { AuthContext } from "../context/AuthContext";
 import LogoutBtn from "./LogoutBtn";
 
 const Navigation = () => {
-  const { isAuthenticated } = useContext(AuthContext);
+  const { isAuthenticated, userInfo } = useContext(AuthContext);
   return (
-    <div className="flex justify-between bg-stone-100 shadow-lg">
+    <div className="flex justify-between w-[100%] bg-stone-100 shadow-lg">
       <Link to={"/"}>
         <div className="px-[70px] py-5 hover:text-violet-500 font-bold">
           Home
         </div>
       </Link>
+      <div className="flex mx-auto items-center text-[#6dad6e]">
+        안녕하세요, {userInfo.nickname}님🍀
+      </div>
       {!isAuthenticated ? (
         <Link to={"/login"}>
           <div className="px-[70px] py-5 hover:text-violet-500 font-bold">
