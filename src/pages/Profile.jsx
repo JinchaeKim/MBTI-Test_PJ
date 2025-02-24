@@ -18,6 +18,7 @@ const Profile = () => {
         try {
           const data = await getUserProfile(token);
           console.log("data", data);
+
           setUserInfo({
             id: data.id,
             nickname: data.nickname,
@@ -30,7 +31,6 @@ const Profile = () => {
     }
   }, []);
   console.log("userInfo", userInfo);
-
   const handleNickNameChange = async (e) => {
     e.preventDefault();
     try {
