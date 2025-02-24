@@ -7,7 +7,7 @@ const LogoutBtn = () => {
   const navigation = useNavigate();
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("accessToken");
     const alertResult = window.confirm("정말 로그아웃 하시겠습니까?");
     alertResult === true ? setIsAuthenticated(false) : setIsAuthenticated(true);
     navigation("/");
