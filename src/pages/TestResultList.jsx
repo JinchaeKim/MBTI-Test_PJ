@@ -105,14 +105,14 @@ const TestResultList = () => {
                         onClick={() => handleVisibility(card)}
                         className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
                       >
-                        비공개로 전환
+                        나만보기
                       </button>
                     ) : (
                       <button
                         onClick={() => handleVisibility(card)}
                         className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
                       >
-                        공개로 전환
+                        공개하기
                       </button>
                     )}
                     <button
