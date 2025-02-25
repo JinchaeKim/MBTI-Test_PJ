@@ -12,9 +12,7 @@ const Navigation = () => {
           Home
         </div>
       </Link>
-      <div className="flex mx-auto items-center text-[#6dad6e]">
-        안녕하세요, {userInfo.nickname}님🍀
-      </div>
+
       {!isAuthenticated ? (
         <Link to={"/login"}>
           <div className="px-[70px] py-5 hover:text-violet-500 font-bold">
@@ -22,18 +20,27 @@ const Navigation = () => {
           </div>
         </Link>
       ) : (
-        <div className="flex">
-          <Link to={"/profile"}>
-            <div className="px-[15px] py-5 hover:text-violet-500">Profile</div>
-          </Link>
-          <Link to={"/test"}>
-            <div className="px-[15px] py-5 hover:text-violet-500">Test</div>
-          </Link>
-          <Link to={"/results"}>
-            <div className="px-[15px] py-5 hover:text-violet-500">Results</div>
-          </Link>
-          <LogoutBtn />
-        </div>
+        <>
+          <div className="flex mx-auto items-center text-[#6dad6e]">
+            안녕하세요, {userInfo.nickname}님🍀
+          </div>
+          <div className="flex">
+            <Link to={"/profile"}>
+              <div className="px-[15px] py-5 hover:text-violet-500">
+                Profile
+              </div>
+            </Link>
+            <Link to={"/test"}>
+              <div className="px-[15px] py-5 hover:text-violet-500">Test</div>
+            </Link>
+            <Link to={"/results"}>
+              <div className="px-[15px] py-5 hover:text-violet-500">
+                Results
+              </div>
+            </Link>
+            <LogoutBtn />
+          </div>
+        </>
       )}
     </div>
   );
