@@ -9,8 +9,12 @@ const LogoutBtn = () => {
   const logout = () => {
     sessionStorage.removeItem("accessToken");
     const alertResult = window.confirm("정말 로그아웃 하시겠습니까?");
-    alertResult === true ? setIsAuthenticated(false) : setIsAuthenticated(true);
-    navigation("/");
+    if (alertResult === true) {
+      setIsAuthenticated(false);
+      navigation("/");
+    } else {
+      setIsAuthenticated(true);
+    }
   };
 
   return (
