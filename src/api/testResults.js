@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const jsonApi = "http://localhost:5000/testResults";
+const jsonApi = "https://ambiguous-emphasized-chance.glitch.me;
 
 export const getTestResults = async () => {
   const response = await axios.get(jsonApi);
