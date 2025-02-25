@@ -49,15 +49,18 @@ const TestResultList = () => {
     setIsVisibility(!isVisibility);
   };
 
-  // 공개 비공개 리스트 filter -> map
+  // 공개 비공개 리스트 filter -> 카드 그리는 map에 사용
   const viewCards = cards.filter((card) => {
     return card.visibility || card.userId === userInfo.id;
   });
 
   // 카드 삭제
   const deleteCard = (cardId) => {
-    deleteTestResult(cardId);
-    setIsVisibility(!isVisibility);
+    const alertResult = window.confirm("정말 삭제하시겠습니까?");
+    if (alertResult === true) {
+      deleteTestResult(cardId);
+      setIsVisibility(!isVisibility);
+    }
   };
 
   return (
