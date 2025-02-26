@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import {
   deleteTestResult,
   getTestResults,
@@ -7,46 +7,47 @@ import {
 import { mbtiDescriptions } from "../utils/mbtiCalculator";
 import { AuthContext } from "../context/AuthContext";
 import { getUserProfile } from "../api/auth";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const TestResultList = () => {
-  const [cards, setCards] = useState([]);
-  const [isVisibility, setIsVisibility] = useState(false);
-  const { userInfo, setUserInfo, token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   // userInfo 가져오기 : isOwner에 필요
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        const data = await getUserProfile(token);
-
-        setUserInfo({
-          id: data.id,
-          nickname: data.nickname,
-        });
-      } catch (error) {
-        console.log("Faild to fetch user info", error);
-      }
-    };
-    fetchUserInfo();
-  }, []);
+  const {
+    data: userInfo = [],
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["fetchUserInfo", token], //token이 바뀌면 querykey도 바뀌기 때문에 새로둔 데이터를 자동으로 불러옴
+    queryFn: () => getUserProfile(token),
+  });
 
   // DB: 결과값 가져오기
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const data = await getTestResults();
-        setCards(data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [isVisibility]);
+  const {
+    data: cards = [],
+    isPending: isCardsPending,
+    isError: isCardsError,
+  } = useQuery({
+    queryKey: ["fetchTestData"],
+    queryFn: getTestResults,
+  });
 
-  // 공개 비공개 전환
-  const handleVisibility = async (card) => {
-    await updateTestResultVisibility(card.id, !card.visibility);
-    setIsVisibility(!isVisibility);
+  // 공개 비공개 전환 - mutation
+  const updateVisibilityMutation = useMutation({
+    mutationFn: ({ id, visibility }) =>
+      updateTestResultVisibility(id, visibility),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["fetchTestData"]);
+    },
+  });
+
+  // 공개 비공개 전환 - handler
+  const handleVisibility = (card) => {
+    updateVisibilityMutation.mutate({
+      id: card.id,
+      visibility: !card.visibility,
+    });
   };
 
   // 공개 비공개 리스트 filter -> 카드 그리는 map에 사용
@@ -54,14 +55,26 @@ const TestResultList = () => {
     return card.visibility || card.userId === userInfo.id;
   });
 
-  // 카드 삭제
+  // 카드 삭제 - mutation
+  const deleteCardMutation = useMutation({
+    mutationFn: deleteTestResult,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["fetchTestData"]);
+    },
+  });
+
+  // 카드 삭제 - handler
   const deleteCard = (cardId) => {
-    const alertResult = window.confirm("정말 삭제하시겠습니까?");
-    if (alertResult === true) {
-      deleteTestResult(cardId);
-      setIsVisibility(!isVisibility);
-    }
+    deleteCardMutation.mutate(cardId);
   };
+
+  if (isPending || isCardsPending) {
+    return <div>정보 가져오는 중...</div>;
+  }
+
+  if (isError || isCardsError) {
+    return <div>에러가 발생했습니다.</div>;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center mx-auto md:w-[70%] w-[90%]">
@@ -100,21 +113,12 @@ const TestResultList = () => {
                 {/* 카드에 있는 visibility로 작성자에게만 버튼 표시 */}
                 {isOwner && (
                   <div className="flex justify-end gap-3 mt-3 mr-5">
-                    {card.visibility ? (
-                      <button
-                        onClick={() => handleVisibility(card)}
-                        className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
-                      >
-                        나만보기
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleVisibility(card)}
-                        className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
-                      >
-                        공개하기
-                      </button>
-                    )}
+                    <button
+                      onClick={() => handleVisibility(card)}
+                      className="px-[20px] py-[8px] text-white bg-blue-500 rounded-full hover:bg-opacity-0 hover:text-blue-500 focus:outline-2 focus:outline-offset-2 focus:outline-blue-400 font-semibold hover:bg-primary-dark transition duration-300"
+                    >
+                      {card.visibility ? "나만보기" : "공개하기"}
+                    </button>
                     <button
                       onClick={() => deleteCard(card.id)}
                       className="px-[20px] py-[8px] text-white bg-red-500 rounded-full hover:bg-opacity-0 hover:text-red-500 focus:outline-2 focus:outline-offset-2 focus:outline-red-400 font-semibold hover:bg-primary-dark transition duration-300"

@@ -4,11 +4,21 @@ import { calculateMBTI, mbtiDescriptions } from "../utils/mbtiCalculator";
 import { useNavigate } from "react-router-dom";
 import { createTestResult } from "../api/testResults";
 import { AuthContext } from "../context/AuthContext";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const TestPage = () => {
   const navigate = useNavigate();
   const [result, setResult] = useState(null);
   const { userInfo } = useContext(AuthContext);
+  const queryClient = useQueryClient();
+
+  // createTestResult
+  const mutation = useMutation({
+    mutationFn: createTestResult,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["fetchTestData"]);
+    },
+  });
 
   // TestForm에서 사용
   const handleTestSubmit = async (answers) => {
@@ -17,18 +27,13 @@ const TestPage = () => {
     const mbtiResult = calculateMBTI(answers); //MBTI 유형
     setResult(mbtiResult);
 
-    const resultsData = await createTestResult({
+    mutation.mutate({
       nickname: userInfo.nickname,
       result: mbtiResult,
       visibility: false,
       date: formattedDate,
       userId: userInfo.id,
     });
-
-    if (!resultsData) {
-      alert("결과 저장에 실패했습니다.");
-      return;
-    }
   };
 
   // 제출 후 결과페이지 이동
